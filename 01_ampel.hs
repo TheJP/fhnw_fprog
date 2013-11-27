@@ -349,3 +349,21 @@ m_concat::[[a]]->[a]
 m_concat [] = []
 m_concat ([]:xs) = m_concat xs
 m_concat ((x:xs):ys) = x:(m_concat (xs:ys)) 
+
+--Monads
+--usage:
+--  • grandfathers (persons!!0)
+--  • father (persons!!0)
+--  • mother (persons!!0)
+--                   Name   Father Mother
+data Person = Person String Person Person | Noone deriving (Show)
+persons = [Person "A" (Person "A.F" (Person "A.F.F" Noone Noone) Noone) (Person "A.M" (Person "A.M.F" Noone Noone) Noone), Person "B" Noone Noone, Person "C" Noone Noone]
+father::Person->Maybe Person
+father (Person _ Noone _) = Nothing
+father (Person _ x _) = Just x --Just == return in this case
+mother::Person->Maybe Person
+mother (Person _ _ Noone) = Nothing
+mother (Person _ _ x) = return x
+
+grandfathers::Person->Maybe (Person, Person)
+grandfathers p = father p >>= father >>= \gff -> mother p >>= father >>= \gmf -> return (gff,gmf)
