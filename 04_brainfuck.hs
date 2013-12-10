@@ -1,10 +1,13 @@
 import Data.Char
 import Bottles
-bf2x3 = createState (BF "++[->+++<]>.")
-bf6x10and5 = createState (BF "++++++[->++++++++++<]>+++++.")
-bfABC = createState (BF "A:++++++[->++++++++++<]>+++++Loop:<+++++[->.+<]")
-bfBottles = createState (BF bottles)
-main = do let bfResult = full bfBottles
+bf2x3 = BF "++[->+++<]>."
+bf6x10and5 = BF "++++++[->++++++++++<]>+++++."
+bfABC = BF "A:++++++[->++++++++++<]>+++++Loop:<+++++[->.+<]"
+bfBottles = BF bottles
+bfABC2 = BF ",[+.,]"
+main = do bf <- getLine
+          is <- getLine
+          let bfResult = full (createState2 (BF bf) is)
           --putStrLn(show bfResult)
           printBF bfResult
               
@@ -19,6 +22,9 @@ data BFState = BFState BF Data BFPointer DataPointer BrackStack BFIO deriving(Sh
 
 createState::BF->BFState
 createState x = BFState x (Data []) (BFPointer 0) (DataPointer 0) (BrackStack []) (BFIO ([],[]))
+
+createState2::BF->[Char]->BFState
+createState2 x y = BFState x (Data []) (BFPointer 0) (DataPointer 0) (BrackStack []) (BFIO (y,[]))
 
 listCalc::(Int->Int)->Int->[Int]->[Int]
 listCalc f 0 (d:ds) = (f d):ds
@@ -58,6 +64,16 @@ listCalc f x [] = listCalc f x [0] --enlarge list if not long enough
     where next bp bs = BFState bf (Data ds) (BFPointer bp) (DataPointer dp) (BrackStack bs) io
 (?.)::BFState->BFState
 (?.) (BFState bf (Data ds) bp (DataPointer dp) bs (BFIO (is,os))) = BFState bf (Data ds) bp (DataPointer dp) bs (BFIO (is,(chr (ds?!!dp)):os))
+(?:)::BFState->BFState
+(?:) (BFState bf ds bp dp bs (BFIO (is,os))) =
+    case is of
+        [] -> bfs 0 []
+        i:nis -> bfs (ord i) nis
+    where addData::Int->Data->DataPointer->Data
+          addData i (Data ds) (DataPointer x) = Data (listCalc (\_ -> i) x ds)
+          bfs::Int->[Char]->BFState
+          bfs i nis = (BFState bf (addData i ds dp) bp dp bs (BFIO (nis,os)))
+          
 
 printBF::BFState->IO ()
 printBF (BFState bf ds bp dp bs (BFIO (is,os))) = putStrLn (reverse os)
@@ -73,7 +89,7 @@ step (BFState (BF bf) ds (BFPointer bp) dp bs io) =
         '[' -> (?/)
         ']' -> (?\)
         '.' -> (?.)
-        --',' -> (?,) --TODO Input
+        ',' -> (?:)
         _   -> \x -> x --skip unkown char
     )
     (BFState (BF bf) ds (BFPointer (bp+1)) dp bs io)
