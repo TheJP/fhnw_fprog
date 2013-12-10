@@ -5,6 +5,7 @@ bf6x10and5 = BF "++++++[->++++++++++<]>+++++."
 bfABC = BF "A:++++++[->++++++++++<]>+++++Loop:<+++++[->.+<]"
 bfBottles = BF bottles
 bfABC2 = BF ",[+.,]"
+bfMusicMaker = BF "++[->+++++++[->++++++>+<<]<]>>[->.<]"
 main = do bf <- getLine
           is <- getLine
           let bfResult = full (createState2 (BF bf) is)
