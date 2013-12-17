@@ -367,3 +367,6 @@ mother (Person _ _ x) = return x
 
 grandfathers::Person->Maybe (Person, Person)
 grandfathers p = father p >>= father >>= \gff -> mother p >>= father >>= \gmf -> return (gff,gmf)
+
+m_reverse2::[a]->[a]
+m_reverse2 = foldr (\x xs -> xs ++ [x]) []
