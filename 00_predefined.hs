@@ -12,9 +12,13 @@ Doing 5 * -3 will make GHCI yell at you but doing 5 * (-3) will work just fine.
 
 
 -}
+{-# LANGUAGE OverloadedStrings #-}
+module Main where
+import System.Directory
+import System.IO
 
 
-main = do
+main2 = do
 	putStr("False && True: ")
 	print(False && True)
 	
@@ -30,4 +34,13 @@ main = do
 	
 	putStr("min, max => min 8 4: ")
 	print(min 8 4)
+    
+main = do   hdl <- openFile "/tmp/foo.txt" WriteMode
+            hPutStr hdl "HELLO"
+            hClose hdl
+            a <- doesFileExist "/tmp/foo.txt"
+            renameFile "/tmp/foo.txt" "/tmp/bar.txt"
+            b <- doesFileExist "/tmp/foo.txt"
+            c <- doesFileExist "/tmp/bar.txt"
+            print (a,b,c)
 	
