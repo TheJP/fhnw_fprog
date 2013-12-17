@@ -376,3 +376,8 @@ m_reverse3 = foldl (\xs x -> x:xs) []
 
 m_pp::[a]->[a]->[a]
 m_pp  a b = foldr (\x xs -> x:xs) b a
+
+m_and::[Bool]->Bool
+m_and = foldr (&&) True
+m_and2::[Bool]->Bool
+m_and2 = foldl (&&) True
