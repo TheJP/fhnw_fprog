@@ -373,3 +373,6 @@ m_reverse2 = foldr (\x xs -> xs ++ [x]) []
 
 m_reverse3::[a]->[a]
 m_reverse3 = foldl (\xs x -> x:xs) []
+
+m_pp::[a]->[a]->[a]
+m_pp  a b = foldr (\x xs -> x:xs) b a
