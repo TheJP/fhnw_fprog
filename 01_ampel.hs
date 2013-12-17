@@ -370,3 +370,6 @@ grandfathers p = father p >>= father >>= \gff -> mother p >>= father >>= \gmf ->
 
 m_reverse2::[a]->[a]
 m_reverse2 = foldr (\x xs -> xs ++ [x]) []
+
+m_reverse3::[a]->[a]
+m_reverse3 = foldl (\xs x -> x:xs) []
