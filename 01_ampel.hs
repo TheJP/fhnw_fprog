@@ -395,9 +395,22 @@ m_and2::[Bool]->Bool
 m_and2 = foldl (&&) True
 
 --Tree Evaluation
-data Expr = Val Int | Var String | Add Expr Expr | Mul Expr Expr
+data Expr = ValOld Int | VarOld String | AddOld Expr Expr | MulOld Expr Expr
 eval::Expr->(String->Int)->Int
-eval (Val x) _ = x
-eval (Var x) f = f x
-eval (Add x y) f = eval x f + eval y f
-eval (Mul x y) f = eval x f * eval y f
+eval (ValOld x) _ = x
+eval (VarOld x) f = f x
+eval (AddOld x y) f = eval x f + eval y f
+eval (MulOld x y) f = eval x f * eval y f
+
+data Op = Add | Sub | Mul | Div
+data Exp a = Val a | Var String | Exp (Exp a) Op (Exp a)
+operator::Num a=>Op->(a->a->a)
+operator Add = (+)
+operator Sub = (-)
+operator Mul = (*)
+--operator Div = (/)
+
+evaluate::Num a=>Exp a->(String->a)->a
+evaluate (Val x) _ = x
+evaluate (Var x) f = f x
+evaluate (Exp x o y) f = (operator o) (evaluate x f) (evaluate y f)
