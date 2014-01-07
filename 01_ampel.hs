@@ -386,6 +386,9 @@ m_pp2 a b = foldr (:) b a
 reverseAppend::[a]->[a]->[a]
 reverseAppend a b = foldl (flip(:)) b a
 
+reverseAppend2::[a]->[a]->[a]
+reverseAppend2 = flip (foldl (flip(:)))
+
 m_and::[Bool]->Bool
 m_and = foldr (&&) True
 m_and2::[Bool]->Bool
