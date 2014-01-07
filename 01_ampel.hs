@@ -389,7 +389,15 @@ reverseAppend a b = foldl (flip(:)) b a
 reverseAppend2::[a]->[a]->[a]
 reverseAppend2 = flip (foldl (flip(:)))
 
-m_and::[Bool]->Bool
+m_and::[Bool]->Bool -- And ueber foldr ist performanter
 m_and = foldr (&&) True
 m_and2::[Bool]->Bool
 m_and2 = foldl (&&) True
+
+--Tree Evaluation
+data Expr = Val Int | Var String | Add Expr Expr | Mul Expr Expr
+eval::Expr->(String->Int)->Int
+eval (Val x) _ = x
+eval (Var x) f = f x
+eval (Add x y) f = eval x f + eval y f
+eval (Mul x y) f = eval x f * eval y f
