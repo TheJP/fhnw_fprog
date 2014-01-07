@@ -374,8 +374,14 @@ m_reverse2 = foldr (\x xs -> xs ++ [x]) []
 m_reverse3::[a]->[a]
 m_reverse3 = foldl (\xs x -> x:xs) []
 
-m_pp::[a]->[a]->[a]
-m_pp  a b = foldr (\x xs -> x:xs) b a
+m_reverse4::[a]->[a]
+m_reverse4 = foldl (flip(:)) []
+
+m_pp::[a]->[a]->[a] --pp = ++
+m_pp a b = foldr (\x xs -> x:xs) b a
+
+m_pp2::[a]->[a]->[a] --pp = ++
+m_pp2 a b = foldr (:) b a
 
 m_and::[Bool]->Bool
 m_and = foldr (&&) True
